@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
 import './Menu.css';
-
-const chapters = [
-    { id: 1, title: 'Chapter 1' },
-    { id: 2, title: 'Chapter 2' },
-    { id: 3, title: 'Chapter 3' },
-    { id: 4, title: 'Chapter 4' }
-];
+import axios from "axios";
+import { HOST, PORT } from '../../prodURL';
 
 export const Menu = () => {
-    const [selectedId, setSelectedId] = useState(chapters[0].id);
+    const [chapters, setChapters] = useState([]);
+    const [selectedId, setSelectedId] = useState(0);
+
+    React.useEffect(() => {
+        const url = `http://${HOST}:${PORT}/chapter`;
+        axios
+            .get(url)
+            .then((resp) => {
+                if (resp.status == 200) {
+                    setChapters(resp.data);
+                    setSelectedId(resp.data[0].id);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+    }, []);
 
     const handleItemClick = (id) => {
         setSelectedId(id);

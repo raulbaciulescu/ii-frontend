@@ -43,12 +43,11 @@ const AuthForm = () => {
             axios
                 .post(url, data)
                 .then((resp) => {
-                    console.log(resp);
                     setIsLoading(false);
                     setIsError(false);
                     setErrorMessage("");
 
-                    const expirationTime = new Date(new Date().getTime() + 600000);
+                    const expirationTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
                     authCtx.login(resp.data.token, expirationTime.toISOString());
 
                     navigate("/mainPage");
