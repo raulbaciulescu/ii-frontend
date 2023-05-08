@@ -7,10 +7,15 @@ export const Menu = () => {
     const [chapters, setChapters] = useState([]);
     const [selectedId, setSelectedId] = useState(0);
 
+    const token = localStorage.getItem("token");
     React.useEffect(() => {
         const url = `http://${HOST}:${PORT}/chapter`;
         axios
-            .get(url)
+            .get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
             .then((resp) => {
                 if (resp.status == 200) {
                     setChapters(resp.data);
