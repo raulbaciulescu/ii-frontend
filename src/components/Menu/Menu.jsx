@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import './Menu.css';
 import axios from "axios";
 import { HOST, PORT } from '../../prodURL';
+import {MainPageContext} from "../../pages/MainPage";
 
 export const Menu = () => {
+    const context = useContext(MainPageContext);
     const [chapters, setChapters] = useState([]);
-    const [selectedId, setSelectedId] = useState(0);
+    const selectedId = context.selectedId;
+    const setSelectedId = context.setSelectedId;
 
     const token = localStorage.getItem("token");
     React.useEffect(() => {
