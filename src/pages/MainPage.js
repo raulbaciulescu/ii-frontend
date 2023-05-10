@@ -7,7 +7,7 @@ export const MainPageContext = createContext();
 
 const MainPage = () => {
 
-    const [selectedId, setSelectedId] = useState(0);
+    const [selectedId, setSelectedId] = useState(1);
 
     return (
         <MainPageContext.Provider value = {{

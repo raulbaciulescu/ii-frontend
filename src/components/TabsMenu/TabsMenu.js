@@ -7,11 +7,11 @@ import {Viewer, Worker} from "@react-pdf-viewer/core";
 import {defaultLayoutPlugin, DefaultLayoutPluginProps} from "@react-pdf-viewer/default-layout";
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
+// interface TabPanelProps {
+//     children?: React.ReactNode;
+//     index: number;
+//     value: number;
+// }
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -58,7 +58,7 @@ export const TabsMenu = () => {
                         localChapterData.videoUrl = youtube_parser(localChapterData.videoUrl);
                         console.log(localChapterData);
                         setChapter(localChapterData);
-                        setPdfUrl(`http://${HOST}:${PORT}${localChapterData.pdfUrl}`);
+                        setPdfUrl(`http://${HOST}:${PORT}/${localChapterData.pdfUrl}`);
                     }
                 })
                 .catch((err) => {
@@ -116,7 +116,7 @@ export const TabsMenu = () => {
                             style={{
                                 border: '1px solid rgba(0, 0, 0, 0.3)',
                                 height: '750px',
-                                width: '1500px',
+                                width: '1100px',
                                 overflow: 'auto'
                             }}
                         >
@@ -133,7 +133,7 @@ export const TabsMenu = () => {
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <iframe style={{width: '1500px', height: '750px'}}
+                <iframe style={{width: '1100px', height: '550px'}}
                         className='video'
                         title='Youtube player'
                         sandbox='allow-same-origin allow-forms allow-popups allow-scripts allow-presentation'

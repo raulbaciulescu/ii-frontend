@@ -1,18 +1,18 @@
 .left-menu {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 200px;
-    background-color: rgba(0, 114, 89, 0.3);
-    margin-top: 80px;
-  }
-  
-  .left-menu div {
-    padding: 15px;
-    cursor: pointer;
-  }
-  
-  .left-menu div.selected {
-    background-color:  rgba(0, 114, 89, 0.7);
-  }
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  background-color: rgba(0, 114, 89, 0.3);
+  margin-top: 80px;
+}
+
+.left-menu div {
+  padding: 15px;
+  cursor: pointer;
+}
+
+.left-menu div.selected {
+  background-color: rgba(0, 114, 89, 0.7);
+}
