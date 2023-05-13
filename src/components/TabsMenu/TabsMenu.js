@@ -44,7 +44,7 @@ export const TabsMenu = () => {
     const selectedId = context.selectedId;
     const [quizQuestions, setQuizQuestions] = useState([]);
     const token = localStorage.getItem("token");
-    const [scorQuiz, setScorQuiz] = useState(3); // TODO de folosit din context (context.scorQuiz) dupa ce se face verificarea
+    const [isArticleVisible, setIsArticleVisible] = useState(false);
 
 
     useEffect(() => {
@@ -64,6 +64,7 @@ export const TabsMenu = () => {
                     setChapter(localChapterData);
                     setPdfUrl(`http://${HOST}:${PORT}/${localChapterData.pdfUrl}`);
                     setArticlePdfUrl(`http://${HOST}:${PORT}/${localChapterData.articleUrl}`)
+                    setIsArticleVisible(localChapterData.showArticle);
                 }
             })
             .catch((err) => {
@@ -117,7 +118,7 @@ export const TabsMenu = () => {
                     <Tab label="Continut" {...a11yProps(0)} />
                     <Tab label="Material Video" {...a11yProps(1)} />
                     <Tab label="Quiz" {...a11yProps(2)} />
-                    {scorQuiz === 3 &&
+                    {isArticleVisible &&
                         <Tab label="Articol premium" {...a11yProps(3)}/>
                     }
                 </Tabs>
