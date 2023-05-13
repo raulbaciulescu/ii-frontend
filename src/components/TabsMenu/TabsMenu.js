@@ -7,6 +7,7 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import Quiz from "../Quiz/Quiz";
+import {CustomPdfViewer} from "./CustomPdfViewer";
 
 // interface TabPanelProps {
 //     children?: React.ReactNode;
@@ -38,11 +39,13 @@ export const TabsMenu = () => {
     const [value, setValue] = useState(0);
     const [chapter, setChapter] = useState(null);
     const [pdfUrl, setPdfUrl] = useState(null);
-    const [pdf, setPdf] = useState(null);
+    const [articlePdfUrl, setArticlePdfUrl] = useState(null);
     const context = useContext(MainPageContext);
     const selectedId = context.selectedId;
     const [quizQuestions, setQuizQuestions] = useState([]);
     const token = localStorage.getItem("token");
+    const [scorQuiz, setScorQuiz] = useState(3); // TODO de folosit din context (context.scorQuiz) dupa ce se face verificarea
+
 
     useEffect(() => {
         let localChapterData;
@@ -58,9 +61,9 @@ export const TabsMenu = () => {
                 if (resp.status == 200) {
                     localChapterData = resp.data;
                     localChapterData.videoUrl = youtube_parser(localChapterData.videoUrl);
-                    console.log(localChapterData);
                     setChapter(localChapterData);
                     setPdfUrl(`http://${HOST}:${PORT}/${localChapterData.pdfUrl}`);
+                    setArticlePdfUrl(`http://${HOST}:${PORT}/${localChapterData.articleUrl}`)
                 }
             })
             .catch((err) => {
@@ -105,15 +108,7 @@ export const TabsMenu = () => {
         } else {
             //error
         }
-    };
-
-    const DocumentWrapper = styled("div")({
-        maxHeight: "600px",
-        overflowY: "auto"
-    });
-
-    const youtubeID = 'KxqlJblhzfI';
-    const defaultLayoutPluginInstance = defaultLayoutPlugin();
+    }
 
     return (
         <div style={{ marginLeft: '300px' }}>
@@ -122,31 +117,18 @@ export const TabsMenu = () => {
                     <Tab label="Continut" {...a11yProps(0)} />
                     <Tab label="Material Video" {...a11yProps(1)} />
                     <Tab label="Quiz" {...a11yProps(2)} />
+                    {scorQuiz === 3 &&
+                        <Tab label="Articol premium" {...a11yProps(3)}/>
+                    }
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}
                 style={{ width: '500px', height: '650px' }}
             >
                 {pdfUrl !== null &&
-                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                        <div
-                            style={{
-                                border: '1px solid rgba(0, 0, 0, 0.3)',
-                                height: '750px',
-                                width: '1100px',
-                                overflow: 'auto'
-                            }}
-                        >
-                            <Viewer fileUrl={pdfUrl}
-                                plugins={[defaultLayoutPluginInstance]}
-                                httpHeaders={
-                                    {
-                                        Authorization: `Bearer ${token}`,
-                                    }
-                                }
-                            />
-                        </div>
-                    </Worker>
+                    <CustomPdfViewer
+                        pdfUrl={pdfUrl}
+                    />
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -159,6 +141,13 @@ export const TabsMenu = () => {
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Quiz quizQuestions={quizQuestions} quizId={selectedId} />
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+                {articlePdfUrl !== null &&
+                    <CustomPdfViewer
+                        pdfUrl={articlePdfUrl}
+                    />
+                }
             </TabPanel>
         </div>
     )
