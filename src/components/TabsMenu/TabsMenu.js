@@ -7,6 +7,7 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import Quiz from "../Quiz/Quiz";
+import {CustomPdfViewer} from "./CustomPdfViewer";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -22,9 +23,30 @@ export const TabsMenu = (props) => {
     const [value, setValue] = useState(0);
     const [chapter, setChapter] = useState(null);
     const [pdfUrl, setPdfUrl] = useState(null);
-    const [quizQuestions, setQuizQuestions] = useState([]);
+    const [articlePdfUrl, setArticlePdfUrl] = useState(null);
     const context = useContext(MainPageContext);
     const selectedId = context.selectedId;
+    const [quizQuestions, setQuizQuestions] = useState([]);
+    const token = localStorage.getItem("token");
+    const [isArticleVisible, setIsArticleVisible] = useState(false);
+
+    const handleChapterUpdate = () => {
+        let localChapterData;
+
+        axios
+            .get(`http://${HOST}:${PORT}/chapter/${selectedId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            .then((resp) => {
+                if (resp.status === 200) {
+                    localChapterData = resp.data;
+                    setIsArticleVisible(localChapterData.showArticle);
+                }
+            })
+            .catch(console.error);
+    }
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -41,9 +63,10 @@ export const TabsMenu = (props) => {
                 if (resp.status === 200) {
                     localChapterData = resp.data;
                     localChapterData.videoUrl = youtube_parser(localChapterData.videoUrl);
-                    console.log(localChapterData);
                     setChapter(localChapterData);
                     setPdfUrl(`http://${HOST}:${PORT}/${localChapterData.pdfUrl}`);
+                    setArticlePdfUrl(`http://${HOST}:${PORT}/${localChapterData.articleUrl}`)
+                    setIsArticleVisible(localChapterData.showArticle);
                 }
             })
             .catch(console.error);
@@ -57,7 +80,6 @@ export const TabsMenu = (props) => {
             .then((resp) => {
                 if (resp.status === 200) {
                     const questions = resp.data.find((quiz) => quiz.id === selectedId);
-                    console.log('these are the questions: ' + JSON.stringify(questions));
                     questions && setQuizQuestions(questions);
                 }
             })
@@ -80,9 +102,7 @@ export const TabsMenu = (props) => {
         if (match && match[2].length === 11) {
             return match[2];
         }
-    };
-
-    const defaultLayoutPluginInstance = defaultLayoutPlugin();
+    }
 
     return (
         <div style={{ marginLeft: '300px' }}>
@@ -91,22 +111,16 @@ export const TabsMenu = (props) => {
                     <Tab label="Continut" {...a11yProps(0)} />
                     <Tab label="Material Video" {...a11yProps(1)} />
                     <Tab label="Quiz" {...a11yProps(2)} />
+                    {isArticleVisible &&
+                        <Tab label="Articol premium" {...a11yProps(3)}/>
+                    }
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0} style={{ width: '500px', height: '650px' }}>
                 {pdfUrl !== null &&
-                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                        <div
-                            style={{
-                                border: '1px solid rgba(0, 0, 0, 0.3)',
-                                height: '750px',
-                                width: '1100px',
-                                overflow: 'auto'
-                            }}
-                        >
-                            <Viewer fileUrl={pdfUrl} plugins={[defaultLayoutPluginInstance]} httpHeaders={{ Authorization: `Bearer ${localStorage.getItem('token')}` }}/>
-                        </div>
-                    </Worker>
+                    <CustomPdfViewer
+                        pdfUrl={pdfUrl}
+                    />
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -116,7 +130,14 @@ export const TabsMenu = (props) => {
                 </iframe>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Quiz quizQuestions={quizQuestions} quizId={selectedId} onSubmit={props.onQuizSubmitted} />
+                <Quiz quizQuestions={quizQuestions} quizId={selectedId} onSubmit={props.onQuizSubmitted} handleChapterUpdate={handleChapterUpdate} />
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+                {articlePdfUrl !== null &&
+                    <CustomPdfViewer
+                        pdfUrl={articlePdfUrl}
+                    />
+                }
             </TabPanel>
         </div>
     )
