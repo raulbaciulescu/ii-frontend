@@ -9,18 +9,17 @@ export const Menu = () => {
     const [chapters, setChapters] = useState([]);
     const selectedId = context.selectedId;
     const setSelectedId = context.setSelectedId;
-
-    const token = localStorage.getItem("token");
+    
     React.useEffect(() => {
         const url = `http://${HOST}:${PORT}/chapter`;
         axios
             .get(url, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
             })
             .then((resp) => {
-                if (resp.status == 200) {
+                if (resp.status === 200) {
                     setChapters(resp.data);
                     setSelectedId(resp.data[0].id);
                 }
@@ -29,20 +28,14 @@ export const Menu = () => {
                 console.log(err);
             });
 
-    }, []);
+    }, [setSelectedId]);
 
-    const handleItemClick = (id) => {
-        setSelectedId(id);
-    };
+    const handleItemClick = (id) => setSelectedId(id);
 
     return (
         <div className="left-menu">
             {chapters.map((chapter) => (
-                <div
-                    key={chapter.id}
-                    className={selectedId === chapter.id ? 'selected' : ''}
-                    onClick={() => handleItemClick(chapter.id)}
-                >
+                <div key={chapter.id} className={selectedId === chapter.id ? 'selected' : ''} onClick={() => handleItemClick(chapter.id)}>
                     {chapter.title}
                 </div>
             ))}
