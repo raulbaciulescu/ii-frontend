@@ -30,15 +30,20 @@ export const Menu = () => {
 
     }, [setSelectedId]);
 
-    const handleItemClick = (id) => setSelectedId(id);
+    const handleItemClick = (id) => {
+        setSelectedId(id);
+
+    }
 
     return (
-        <div className="left-menu">
-            {chapters.map((chapter) => (
-                <div key={chapter.id} className={selectedId === chapter.id ? 'selected' : ''} onClick={() => handleItemClick(chapter.id)}>
-                    {chapter.title}
-                </div>
-            ))}
-        </div>
+        <MainPageContext.Provider>
+            <div className="left-menu">
+                {chapters.map((chapter) => (
+                    <div key={chapter.id} className={selectedId === chapter.id ? 'selected' : ''} onClick={() => handleItemClick(chapter.id)}>
+                        {chapter.title}
+                    </div>
+                ))}
+            </div>
+        </MainPageContext.Provider>
     );
 };
