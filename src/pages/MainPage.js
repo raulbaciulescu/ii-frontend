@@ -22,13 +22,13 @@ const MainPage = () => {
         })
         .then(resp => {
             if (200 === resp.status) {
-                setUsername(resp.data.firstName);
+                setUsername(resp.data.firstName + ' ' + resp.data.lastName);
                 setScore(resp.data.score);
                 localStorage.setItem('uid', resp.data.id);
             }
         })
         .catch(console.error);
-    
+
     return (
         <MainPageContext.Provider value={{ selectedId, setSelectedId }}>
             <div>

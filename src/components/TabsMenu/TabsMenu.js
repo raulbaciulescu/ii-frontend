@@ -3,8 +3,6 @@ import { Box, Tab, Tabs } from "@mui/material";
 import { MainPageContext } from "../../pages/MainPage";
 import { HOST, PORT } from "../../prodURL";
 import axios from "axios";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import Quiz from "../Quiz/Quiz";
 import {CustomPdfViewer} from "./CustomPdfViewer";
@@ -50,7 +48,6 @@ export const TabsMenu = (props) => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-
         let localChapterData;
 
         axios
@@ -85,6 +82,7 @@ export const TabsMenu = (props) => {
             })
             .catch(console.error);
 
+        setValue(0);
     }, [selectedId]);
 
     const handleChange = (_, newValue) => setValue(newValue);

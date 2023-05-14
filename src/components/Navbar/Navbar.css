@@ -11,8 +11,7 @@
 	flex: 1;
 	display: flex;
 	align-items: center;
-	justify-content: flex-start;
-	font-size: large;
+	font-size: 20px;
 	font-weight: 600;
 	padding-top: 25px;
 }
