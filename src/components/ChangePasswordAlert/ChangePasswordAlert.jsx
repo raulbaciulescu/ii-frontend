@@ -17,7 +17,7 @@ const ChangePasswordAlert = ({ open, onClose }) => {
     const token = localStorage.getItem("token");
     axios
       .post(url, {
-        email: 'maria@gmail.com',
+        email: localStorage.getItem('email'),
         newPassword: inputValue
       },
         {
@@ -36,7 +36,7 @@ const ChangePasswordAlert = ({ open, onClose }) => {
     open && (
       <div className="alert-backdrop">
         <div className="alert-content">
-          
+
           <TextField
             type="password"
             className="inputNewPassword"

@@ -163,6 +163,8 @@ const AuthForm = () => {
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
+                            setErrorMessage("");
+                            setIsError(false);
                         }}
                     ></TextField>
                     {!isLogin &&
