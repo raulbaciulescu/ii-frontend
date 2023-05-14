@@ -30,6 +30,23 @@ export const TabsMenu = (props) => {
     const token = localStorage.getItem("token");
     const [isArticleVisible, setIsArticleVisible] = useState(false);
 
+    const handleChapterUpdate = () => {
+        let localChapterData;
+
+        axios
+            .get(`http://${HOST}:${PORT}/chapter/${selectedId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            .then((resp) => {
+                if (resp.status === 200) {
+                    localChapterData = resp.data;
+                    setIsArticleVisible(localChapterData.showArticle);
+                }
+            })
+            .catch(console.error);
+    }
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -63,7 +80,6 @@ export const TabsMenu = (props) => {
             .then((resp) => {
                 if (resp.status === 200) {
                     const questions = resp.data.find((quiz) => quiz.id === selectedId);
-                    console.log('these are the questions: ' + JSON.stringify(questions));
                     questions && setQuizQuestions(questions);
                 }
             })
@@ -114,7 +130,7 @@ export const TabsMenu = (props) => {
                 </iframe>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Quiz quizQuestions={quizQuestions} quizId={selectedId} onSubmit={props.onQuizSubmitted} />
+                <Quiz quizQuestions={quizQuestions} quizId={selectedId} onSubmit={props.onQuizSubmitted} handleChapterUpdate={handleChapterUpdate} />
             </TabPanel>
             <TabPanel value={value} index={3}>
                 {articlePdfUrl !== null &&

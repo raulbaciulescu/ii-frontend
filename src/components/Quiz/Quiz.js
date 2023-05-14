@@ -2,7 +2,7 @@ import axios from "axios";
 import { React, useState } from "react";
 import { HOST, PORT } from "../../prodURL";
 
-const Quiz = ({ quizQuestions, quizId, onSubmit }) => {
+const Quiz = ({ quizQuestions, quizId, onSubmit, handleChapterUpdate }) => {
     const [answers, setAnswers] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [showScorePopup, setShowScorePopup] = useState(false);
@@ -20,19 +20,21 @@ const Quiz = ({ quizQuestions, quizId, onSubmit }) => {
         setSubmitting(true);
         
         var temp = 0;
-        answers.forEach((answer, index) => quizQuestions.questions[index].correctOption === answer && ++temp);
+        answers.forEach((answer, index) => quizQuestions.questions[index].correctOption === answer ? temp++ : '');
         setScore(temp);
         onSubmit(temp);
 
         setShowScorePopup(true);
 
         axios
-            .post(`http://${HOST}:${PORT}/quiz?userId=${localStorage.getItem('uid')}&quizId=${quizId}&score=${score}`, {}, {
+            .post(`http://${HOST}:${PORT}/quiz?userId=${localStorage.getItem('uid')}&quizId=${quizId}&score=${temp}`, {}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             })
-            .then(resp => console.log(JSON.stringify(resp)))
+            .then(resp => {
+                handleChapterUpdate();
+            })
             .catch(console.error);
     };
 
