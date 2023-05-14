@@ -1,20 +1,35 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useState } from 'react'
 import { Navbar } from '../components/Navbar/Navbar';
 import { Menu } from '../components/Menu/Menu';
 import { TabsMenu } from "../components/TabsMenu/TabsMenu";
+import axios from "axios";
+import { HOST, PORT } from "../prodURL";
 
 export const MainPageContext = createContext();
 
 const MainPage = () => {
-
     const [selectedId, setSelectedId] = useState(1);
+    const [username, setUsername] = useState('Username');
+    const [score, setScore] = useState('Score');
+
+    axios
+        .get(`http://${HOST}:${PORT}/user/${localStorage.getItem('email')}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then(resp => {
+            if (200 === resp.status) {
+                setUsername(resp.data.firstName);
+                setScore(resp.data.score);
+            }
+        })
+        .catch(console.error);
     
     return (
-        <MainPageContext.Provider value={{
-            selectedId, setSelectedId
-        }}>
+        <MainPageContext.Provider value={{ selectedId, setSelectedId }}>
             <div>
-                <Navbar />
+                <Navbar username={username} score={score} />
                 <Menu />
                 <TabsMenu />
             </div>

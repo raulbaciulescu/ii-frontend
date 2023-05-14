@@ -29,6 +29,8 @@ const AuthForm = () => {
         setConfirmPassword("");
     };
 
+    const saveEmailToLocalStorage = () => localStorage.setItem('email', email);
+
     const submitHandler = (event) => {
         event.preventDefault();
         setIsLoading(true);
@@ -50,6 +52,8 @@ const AuthForm = () => {
                     const expirationTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
                     authCtx.login(resp.data.token, expirationTime.toISOString());
 
+                    saveEmailToLocalStorage();
+
                     navigate("/mainPage");
                 })
                 .catch((err) => {
@@ -68,14 +72,15 @@ const AuthForm = () => {
 
             axios
                 .post(url, data)
-                .then((resp) => {
+                .then(_ => {
                     setIsLoading(false);
                     setIsError(false);
                     setErrorMessage("");
+                    saveEmailToLocalStorage();
                     clearFields();
                     setIsLogin(true);
                 })
-                .catch((err) => {
+                .catch(_ => {
                     setIsLoading(false);
                     setIsError(true);
                     setErrorMessage("Register failed!");
