@@ -189,20 +189,20 @@ const AuthForm = () => {
                     </div>
                 </form>
                 {isLogin &&
-                    <a className="secondButton" onClick={() => {
+                    <button className="secondButton" onClick={() => {
                         clearFields();
                         setIsError(false);
                         setErrorMessage("");
                         setIsLogin(false)
-                    }}>Register</a>
+                    }}>Register</button>
                 }
                 {!isLogin &&
-                    <a className="secondButton" onClick={() => {
+                    <button className="secondButton" onClick={() => {
                         clearFields();
                         setIsError(false);
                         setErrorMessage("");
                         setIsLogin(true)
-                    }}>Login</a>
+                    }}>Login</button>
                 }
             </section>
         </div>

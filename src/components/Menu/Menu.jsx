@@ -9,15 +9,13 @@ export const Menu = () => {
     const [chapters, setChapters] = useState([]);
     const selectedId = context.selectedId;
     const setSelectedId = context.setSelectedId;
-
-    const token = localStorage.getItem("token");
     
     React.useEffect(() => {
         const url = `http://${HOST}:${PORT}/chapter`;
         axios
             .get(url, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
             })
             .then((resp) => {
@@ -30,7 +28,7 @@ export const Menu = () => {
                 console.log(err);
             });
 
-    }, []);
+    }, [setSelectedId]);
 
     const handleItemClick = (id) => setSelectedId(id);
 

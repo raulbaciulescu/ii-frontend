@@ -12,6 +12,8 @@ const MainPage = () => {
     const [username, setUsername] = useState('Username');
     const [score, setScore] = useState('Score');
 
+    const addSubmitedScore = newScore => setScore(score + newScore);
+
     axios
         .get(`http://${HOST}:${PORT}/user/${localStorage.getItem('email')}`, {
             headers: {
@@ -22,6 +24,7 @@ const MainPage = () => {
             if (200 === resp.status) {
                 setUsername(resp.data.firstName);
                 setScore(resp.data.score);
+                localStorage.setItem('uid', resp.data.id);
             }
         })
         .catch(console.error);
@@ -31,7 +34,7 @@ const MainPage = () => {
             <div>
                 <Navbar username={username} score={score} />
                 <Menu />
-                <TabsMenu />
+                <TabsMenu onQuizSubmitted={addSubmitedScore} />
             </div>
         </MainPageContext.Provider>
 
